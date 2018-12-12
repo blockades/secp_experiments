@@ -1,0 +1,16 @@
+{
+  "name": "secp_experiments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "elliptic": "^6.4.1",
+    "keythereum": "^1.0.4",
+    "secp256k1": "^3.5.2"
+  }
+}
