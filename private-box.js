@@ -1,4 +1,3 @@
-
 var sodium = require('chloride')
 const secp256k1 = require('secp256k1')
 var secretbox = sodium.crypto_secretbox_easy
@@ -42,17 +41,17 @@ const DEFAULT_MAX = 7
 
 exports.encrypt =
 exports.multibox = function (msg, recipients, max) {
-
   max = setMax(max)
 
-  if(recipients.length > max)
+  if (recipients.length > max) {
     throw new Error('max recipients is:' + max + ' found:' + recipients.length)
+  }
 
   var nonce = randombytes(24)
   var key = randombytes(32)
   var onetime = keypair()
 
-  var _key = concat([new Buffer([recipients.length & max]), key])
+  var _key = concat([ Buffer.alloc([recipients.length & max]), key ])
   return concat([
     nonce,
     onetime.publicKey,
@@ -65,7 +64,6 @@ exports.multibox = function (msg, recipients, max) {
 
 exports.decrypt =
 exports.multibox_open = function (ctxt, sk, max) {
-
   max = setMax(max)
 
   var nonce = ctxt.slice(0, 24)
@@ -73,7 +71,7 @@ exports.multibox_open = function (ctxt, sk, max) {
   var my_key = scalarmult(sk, onetime_pk)
   var _key, key, length, start = 24 + publicKeyLength
   var size = 32 + 1 + 16
-  for(var i = 0; i <= max; i++) {
+  for (var i = 0; i <= max; i++) {
     var s = start + size * i
     if (s + size > (ctxt.length - 16)) continue
     _key = secretbox_open(ctxt.slice(s, s + size), nonce, my_key)
@@ -84,6 +82,6 @@ exports.multibox_open = function (ctxt, sk, max) {
     }
   }
 
-  if(!key) return
-  return secretbox_open(ctxt.slice(start+length*size), nonce, key)
+  if (!key) return
+  return secretbox_open(ctxt.slice(start + length * size), nonce, key)
 }

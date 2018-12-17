@@ -1,23 +1,9 @@
 const k = require('keythereum')
 const secp256k1 = require('secp256k1')
-const { randomBytes, createHash } = require('crypto')
+const { createHash } = require('crypto')
 const sha256 = createHash('sha256')
 const generateKeys = require('.')
 
-//
-// module.exports = function generateKeys () {
-//   let secretKey
-//   do {
-//     secretKey = randomBytes(32)
-//   } while (!secp256k1.privateKeyVerify(secretKey))
-//
-//   // get the public key in a compressed format
-//   return {
-//     secretKey,
-//     publicKey: secp256k1.publicKeyCreate(secretKey)
-//   }
-// }
-//
 const alice = generateKeys()
 const bob = generateKeys()
 
