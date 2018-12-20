@@ -52,6 +52,7 @@ exports.multibox = function (msg, recipients, max) {
 
   var nonce = randombytes(24)
   var key = randombytes(32)
+  // TODO: i think keypair needs to be the right kind for each recp
   var onetime = keypair()
   var _key = concat([ Buffer.from([recipients.length & max]), key ])
   return concat([
