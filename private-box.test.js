@@ -6,16 +6,15 @@ var sodium = require('chloride')
 var keypair = require('.')
 
 var alice = keypair()
-var bob   = keypair()
+var bob = keypair()
 var carol = sodium.crypto_box_keypair()
 
 function arrayOfSize (n) {
-  return new Array(n+1).join('0').split('')
+  return new Array(n + 1).join('0').split('')
 }
 
 tape('simple', function (t) {
-
-  var msg = new Buffer('hello there!')
+  var msg = Buffer.from('hello there!', 'utf-8')
   var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey])
   console.log(ctxt)
 
@@ -30,7 +29,7 @@ tape('simple', function (t) {
 })
 
 tape('errors when too many recipients', function (t) {
-  var msg = new Buffer('hello there!')
+  var msg = Buffer.from('hello there!', 'utf-8')
   var pk = alice.publicKey
   t.throws(function () {
       c.multibox(msg, [
@@ -69,7 +68,7 @@ tape('can encrypt/decrypt up to 255 recipients after setting a custom max', func
 
 
 tape('errors when max is more than 255 or less than 1', function (t) {
-  var msg = new Buffer('hello there!')
+  var msg = Buffer.from('hello there!', 'utf-8')
   var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey])
   var pk = alice.publicKey
   var sk = alice.secretKey
@@ -86,8 +85,7 @@ tape('errors when max is more than 255 or less than 1', function (t) {
 
 
 tape('mixture of keypair types', function (t) {
-
-  var msg = new Buffer('hello there!')
+  var msg = Buffer.from('hello there!', 'utf-8')
   var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey, carol.publicKey])
   console.log(ctxt)
 

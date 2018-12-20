@@ -24,18 +24,16 @@ function keypair () {
 }
 
 function randombytes (n) {
-  var b = new Buffer(n)
+  var b = Buffer.alloc(n)
   sodium.randombytes(b)
   return b
 }
 
 function setMax (m) {
   m = m || DEFAULT_MAX
-  if (m < 1 || m > 255)
-    throw new Error('max recipients must be between 0 and 255.')
+  if (m < 1 || m > 255) throw new Error('max recipients must be between 0 and 255.')
   return m
 }
-
 
 const DEFAULT_MAX = 7
 
@@ -50,8 +48,7 @@ exports.multibox = function (msg, recipients, max) {
   var nonce = randombytes(24)
   var key = randombytes(32)
   var onetime = keypair()
-
-  var _key = concat([ Buffer.alloc([recipients.length & max]), key ])
+  var _key = concat([ Buffer.from([recipients.length & max]), key ])
   return concat([
     nonce,
     onetime.publicKey,
