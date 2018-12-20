@@ -7,8 +7,12 @@ var concat = Buffer.concat
 const publicKeyLength = 33
 
 function scalarmult (sk, pk) {
-  if (pk[0] === 0) return sodium.crypto_scalarmult(sk, pk)
-  if (pk[0] === 2 || pk[0] === 3) return secp256k1.ecdh(pk, sk)
+  switch (pk[0]) {
+    case 0: return sodium.crypto_scalarmult(sk, pk)
+    case 2:
+    case 3: return secp256k1.ecdh(pk, sk)
+    default: throw new Error('Public key not formatted as expected')
+  }
 }
 
 function keypair () {
@@ -67,7 +71,8 @@ exports.multibox_open = function (ctxt, sk, max) {
   var nonce = ctxt.slice(0, 24)
   var onetime_pk = ctxt.slice(24, 24 + publicKeyLength)
   var my_key = scalarmult(sk, onetime_pk)
-  var _key, key, length, start = 24 + publicKeyLength
+  var _key, key, length
+  var start = 24 + publicKeyLength
   var size = 32 + 1 + 16
   for (var i = 0; i <= max; i++) {
     var s = start + size * i
