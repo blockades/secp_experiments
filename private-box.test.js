@@ -86,7 +86,8 @@ tape('errors when max is more than 255 or less than 1', function (t) {
 
 tape('mixture of keypair types', function (t) {
   var msg = Buffer.from('hello there!', 'utf-8')
-  var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey, carol.publicKey])
+  const cPubKey = Buffer.concat([Buffer.from([0]), carol.publicKey])
+  var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey, cPubKey])
   console.log(ctxt)
 
   ;[alice.secretKey, bob.secretKey].forEach(function (sk) {
@@ -98,4 +99,3 @@ tape('mixture of keypair types', function (t) {
 
   t.end()
 })
-
