@@ -90,7 +90,7 @@ tape('mixture of keypair types', function (t) {
   var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey, cPubKey])
   console.log(ctxt)
 
-  ;[alice.secretKey, bob.secretKey].forEach(function (sk) {
+  ;[alice.secretKey, bob.secretKey, carol.secretKey].forEach(function (sk) {
     console.log(ctxt, sk)
     var _msg = c.multibox_open(ctxt, sk)
 
