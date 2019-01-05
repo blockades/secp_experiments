@@ -32,12 +32,12 @@ tape('errors when too many recipients', function (t) {
   var msg = Buffer.from('hello there!', 'utf-8')
   var pk = alice.publicKey
   t.throws(function () {
-      c.multibox(msg, [
-        pk,pk,pk,pk,
-        pk,pk,pk,pk,
-        pk,pk,pk,pk,
-        pk,pk,pk,pk
-      ])
+    c.multibox(msg, [
+      pk, pk, pk, pk,
+      pk, pk, pk, pk,
+      pk, pk, pk, pk,
+      pk, pk, pk, pk
+    ])
   })
   t.end()
 })
@@ -66,23 +66,21 @@ tape('can encrypt/decrypt up to 255 recipients after setting a custom max', func
   t.end()
 })
 
-
 tape('errors when max is more than 255 or less than 1', function (t) {
   var msg = Buffer.from('hello there!', 'utf-8')
   var ctxt = c.multibox(msg, [alice.publicKey, bob.publicKey])
   var pk = alice.publicKey
   var sk = alice.secretKey
   t.throws(function () {
-      c.multibox(msg, [
-        pk,pk,pk,pk,
-      ], -1)
+    c.multibox(msg, [
+      pk, pk, pk, pk
+    ], -1)
   })
   t.throws(function () {
-      c.multibox.open(ctxt, sk, 256)
+    c.multibox.open(ctxt, sk, 256)
   })
   t.end()
 })
-
 
 tape('mixture of keypair types', function (t) {
   var msg = Buffer.from('hello there!', 'utf-8')

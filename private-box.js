@@ -6,11 +6,11 @@ var concat = Buffer.concat
 
 const publicKeyLength = 33
 
-function scalarmult (sk, pk) {
+function scalarmult (secretKeySecp, secretKey25519, pk) {
   switch (pk[0]) {
-    case 0: return sodium.crypto_scalarmult(sk, pk)
+    case 0: return sodium.crypto_scalarmult(secretKey25519, pk.slice(1))
     case 2:
-    case 3: return secp256k1.ecdh(pk, sk)
+    case 3: return secp256k1.ecdh(pk, secretKeySecp)
     default: throw new Error('Public key not formatted as expected')
   }
 }
@@ -52,14 +52,19 @@ exports.multibox = function (msg, recipients, max) {
 
   var nonce = randombytes(24)
   var key = randombytes(32)
-  // TODO: i think keypair needs to be the right kind for each recp
-  var onetime = keypair()
+  var oneTimeSecp = keypair()
+  var oneTimeCurve25519 = sodium.crypto_box_keypair()
   var _key = concat([ Buffer.from([recipients.length & max]), key ])
   return concat([
     nonce,
-    onetime.publicKey,
+    oneTimeSecp.publicKey,
+    oneTimeCurve25519.publicKey,
     concat(recipients.map(function (r_pk, i) {
-      return secretbox(_key, nonce, scalarmult(onetime.secretKey, r_pk))
+      return secretbox(
+        _key,
+        nonce,
+        scalarmult(oneTimeSecp.secretKey, oneTimeCurve25519.secretKey, r_pk)
+      )
     })),
     secretbox(msg, nonce, key)
   ])
@@ -70,10 +75,11 @@ exports.multibox_open = function (ctxt, sk, max) {
   max = setMax(max)
 
   var nonce = ctxt.slice(0, 24)
-  var onetime_pk = ctxt.slice(24, 24 + publicKeyLength)
+  var oneTimeSecp_pk = ctxt.slice(24, 24 + publicKeyLength)
+  var oneTime25519_pk = ctxt.slice(24 + publicKeyLength)
   var my_key = scalarmult(sk, onetime_pk)
   var _key, key, length
-  var start = 24 + publicKeyLength
+  var start = 24 + publicKeyLength + publicKeyLength
   var size = 32 + 1 + 16
   for (var i = 0; i <= max; i++) {
     var s = start + size * i
