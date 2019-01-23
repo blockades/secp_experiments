@@ -15,5 +15,8 @@
     "keythereum": "^1.0.4",
     "secp256k1": "^3.5.2",
     "tape": "^4.9.1"
+  },
+  "devDependencies": {
+    "tape-plus": "^1.0.0"
   }
 }
