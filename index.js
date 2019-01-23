@@ -1,7 +1,19 @@
 const secp256k1 = require('secp256k1')
-const { randomBytes } = require('crypto')
+const sodium = require('sodium-native')
 
-// This gives use methods of the same form as nacl
+function sha256 (message) {
+  var hash = Buffer.alloc(sodium.crypto_hash_sha256_BYTES)
+  sodium.crypto_hash_sha256(hash, message)
+  return hash
+}
+
+function randomBytes (len) {
+  var rb = Buffer.alloc(len)
+  sodium.randombytes_buf(rb)
+  return rb
+}
+
+// This gives us methods of the same form as nacl
 // for use with ssb-keys
 
 exports.generateKeys =
@@ -18,12 +30,14 @@ exports.generate = function () {
   }
 }
 
-exports.sign = function (privateKey, message) {
+exports.sign = function (secretKey, message) {
+  const hash = sha256(message)
   // arguments are the other way around
-  return secp256k1.sign(message, privateKey)
+  return secp256k1.sign(hash, secretKey).signature
 }
 
 exports.verify = function (publicKey, signature, message) {
+  const hash = sha256(message)
   // arguments are the other way around
-  return secp256k1.verify(message, signature, publicKey)
+  return secp256k1.verify(hash, signature, publicKey)
 }
