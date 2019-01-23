@@ -2,7 +2,7 @@ const k = require('keythereum')
 const secp256k1 = require('secp256k1')
 const { createHash } = require('crypto')
 const sha256 = createHash('sha256')
-const generateKeys = require('.')
+const { generateKeys } = require('.')
 
 const alice = generateKeys()
 const bob = generateKeys()
@@ -17,7 +17,6 @@ console.log('Bob public key: ', bob.publicKey.toString('hex'))
 
 console.log('ecdh shared secret alicepk, bobsk ', secp256k1.ecdh(alice.publicKey, bob.secretKey).toString('base64'))
 console.log('ecdh shared secret bobpk, alicesk ', secp256k1.ecdh(bob.publicKey, alice.secretKey).toString('base64'))
-
 
 console.log('sha256(ecdhUnsafe), to demonstrate it is the same as ecdh: ', sha256.update(secp256k1.ecdhUnsafe(alice.publicKey, bob.secretKey)).digest().toString('base64'))
 

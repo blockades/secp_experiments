@@ -3,10 +3,10 @@ var crypto = require('crypto')
 
 var c = require('./private-box')
 var sodium = require('chloride')
-var keypair = require('.')
+var { generateKeys } = require('.')
 
-var alice = keypair()
-var bob = keypair()
+var alice = generateKeys()
+var bob = generateKeys()
 var carol = sodium.crypto_box_keypair()
 
 function arrayOfSize (n) {
@@ -44,7 +44,7 @@ tape('errors when too many recipients', function (t) {
 
 function encryptDecryptTo (n, t) {
   var msg = crypto.randomBytes(1024)
-  var keys = arrayOfSize(n).map(function () { return keypair() })
+  var keys = arrayOfSize(n).map(function () { return generateKeys() })
 
   var ctxt = c.multibox(msg, keys.map(function (e) { return e.publicKey }), n)
 
@@ -53,7 +53,7 @@ function encryptDecryptTo (n, t) {
     t.deepEqual(c.multibox_open(ctxt, keys.secretKey, n), msg)
   })
 
-  t.equal(c.multibox_open(ctxt, keypair().secretKey), undefined)
+  t.equal(c.multibox_open(ctxt, generateKeys().secretKey), undefined)
 }
 
 tape('with no custom max set, encrypt/decrypt to 7 keys', function (t) {

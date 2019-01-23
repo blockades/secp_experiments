@@ -1,7 +1,8 @@
 const secp256k1 = require('secp256k1')
 const { randomBytes } = require('crypto')
 
-module.exports = function generateKeys () {
+exports.generateKeys =
+exports.generate = function () {
   let secretKey
   do {
     secretKey = randomBytes(32)
