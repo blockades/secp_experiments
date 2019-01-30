@@ -7,12 +7,13 @@ var pathToSecret = './ssb-identity'
 try { fs.mkdirSync(pathToDB) } catch(e) {}
 
 // ways to create keys:
-var keys = require('ssb-keys').generate()
+// var keys = require('ssb-keys').generate()
 // var keys = require('ssb-keys').generate('secp256k1')
 //var keys = require('ssb-keys').loadSync(pathToSecret)
 //var keys = require('ssb-keys').createSync(pathToSecret)
-// var keys = require('ssb-keys').loadOrCreateSync(pathToSecret)
+var keys = require('ssb-keys').loadOrCreateSync(pathToSecret, 'secp256k1')
 
+console.log(keys)
 // create the db instance.
 //  - uses leveldb.
 //  - can only open one instance at a time.
