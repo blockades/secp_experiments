@@ -17,7 +17,7 @@ console.log(keys)
 var ssb = require('ssb-db/create')(pathToDB, {})
 var feed = ssb.createFeed(keys)
 
-feed.add({ type: 'post', text: 'My First Post!' }, function (err, msg, hash) {
+feed.add({ type: 'post', text: 'it nice to be important but its more important to be nice' }, function (err, msg, hash) {
   // the message as it appears in the database:
   console.log('msg', msg)
 

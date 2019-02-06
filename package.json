@@ -19,6 +19,7 @@
     "tape": "^4.9.1"
   },
   "devDependencies": {
+    "scuttle-testbot": "^1.1.6",
     "tape-plus": "^1.0.0"
   }
 }

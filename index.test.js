@@ -10,3 +10,9 @@ test('Sign and verify', t => {
   t.ok(signature, 'returns a signature')
   t.ok(verify(keyPair.publicKey, signature, message), 'signature valid')
 })
+
+test('', t => {
+  for (var i = 0; i < 100000; i++) {
+    const keyPair = generate()
+  }
+})

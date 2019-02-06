@@ -19,10 +19,12 @@ function randomBytes (len) {
 exports.generateKeys =
 exports.generate = function () {
   let secretKey
+  let n = 0
   do {
+    n++
     secretKey = randomBytes(32)
   } while (!secp256k1.privateKeyVerify(secretKey))
-
+  if (n > 1) console.log('n = ', n)
   // public key is given in short form
   return {
     secretKey,
